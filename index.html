@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#00000a"/>
+<title>al-ai.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=M+PLUS+Code+Latin:wght@100..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+body { width: 100%; background: #00000a; overflow-x: hidden; font-family: "Google Sans Code", monospace; }
+
+/* ── HEADER ── */
+.main-header {
+  position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%; z-index: 103;
+  background: rgba(4, 0, 10, 0.3);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+}
+.logo { font-size: 1.5rem; font-weight: 700; color: #f0e8ff; letter-spacing: 0.1em; cursor: pointer; z-index: 102; }
+.nav-center { display: flex; gap: 40px; position: absolute; left: 50%; transform: translateX(-50%); }
+.nav-center a { text-decoration: none; color: rgba(180,210,255,0.65); font-size: 1rem; transition: 0.3s; }
+.nav-center a:hover { color: #c084fc; }
+.btn-contact {
+  position: relative; padding: 10px 24px; background: linear-gradient(135deg, #2667b2, #202a99);
+  color: #fff; border: none; font-family: "Google Sans Code", monospace; font-weight: 600; font-size: 0.9rem;
+  text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; border-radius: 2px; text-decoration: none;
+}
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 36px; height: 36px; cursor: pointer; z-index: 102; background: none; border: none; padding: 4px;
+}
+.hamburger span {
+  display: block; height: 2px; width: 100%; background: #f0e8ff;
+  border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE DRAWER ── */
+.mobile-menu {
+  display: none;
+  position: fixed; top: 0; right: 0; width: 82vw; max-width: 360px; height: 100dvh;
+  z-index: 101;
+  background: #03010f;
+  flex-direction: column; align-items: flex-start; justify-content: center;
+  padding: 100px 0 60px;
+  pointer-events: none;
+  transform: translateX(100%);
+  transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+  overflow: hidden;
+}
+.mobile-menu::before {
+  content: '';
+  position: absolute; top: 0; left: 0; width: 1px; height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(96,165,250,0.7) 30%, rgba(168,85,247,0.9) 60%, transparent 100%);
+  opacity: 0; transition: opacity 0.4s ease 0.3s;
+}
+.mobile-menu::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,10,40,0.18) 3px, rgba(0,10,40,0.18) 4px);
+  z-index: 0;
+}
+.mobile-menu.open { transform: translateX(0); pointer-events: all; }
+.mobile-menu.open::before { opacity: 1; }
+
+.menu-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,8,0.7); backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.menu-backdrop.open { opacity: 1; pointer-events: all; }
+
+.mobile-menu .menu-items {
+  position: relative; z-index: 1; width: 100%;
+  display: flex; flex-direction: column;
+}
+.mobile-menu .menu-item {
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateX(40px);
+  transition: opacity 0.0s, transform 0.0s;
+}
+.mobile-menu.open .menu-item:nth-child(1) { opacity: 1; transform: translateX(0); transition: opacity 0.45s ease 0.22s, transform 0.45s cubic-bezier(0.23,1,0.32,1) 0.22s; }
+.mobile-menu.open .menu-item:nth-child(2) { opacity: 1; transform: translateX(0); transition: opacity 0.45s ease 0.32s, transform 0.45s cubic-bezier(0.23,1,0.32,1) 0.32s; }
+.mobile-menu.open .menu-item:nth-child(3) { opacity: 1; transform: translateX(0); transition: opacity 0.45s ease 0.42s, transform 0.45s cubic-bezier(0.23,1,0.32,1) 0.42s; }
+
+.mobile-menu .menu-item a {
+  display: flex; align-items: center; gap: 14px;
+  text-decoration: none; color: rgba(180,210,255,0.7);
+  font-size: 1.25rem; font-family: "Google Sans Code", monospace;
+  font-weight: 500; letter-spacing: 0.04em;
+  padding: 20px 36px;
+  border-bottom: 1px solid rgba(60,120,255,0.08);
+  transition: color 0.2s, padding-left 0.25s;
+  position: relative;
+}
+.mobile-menu .menu-item:first-child a { border-top: 1px solid rgba(60,120,255,0.08); }
+.mobile-menu .menu-item a::before {
+  content: attr(data-num);
+  font-size: 0.6rem; letter-spacing: 0.2em; color: rgba(96,165,250,0.4);
+  font-weight: 400; min-width: 20px;
+  transition: color 0.2s;
+}
+.mobile-menu .menu-item a::after {
+  content: '';
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%) scaleY(0);
+  width: 2px; height: 60%; background: linear-gradient(180deg, #60a5fa, #a855f7);
+  transition: transform 0.25s cubic-bezier(0.23,1,0.32,1);
+  transform-origin: center;
+}
+.mobile-menu .menu-item a:hover,
+.mobile-menu .menu-item a:active { color: #e8f0ff; padding-left: 44px; }
+.mobile-menu .menu-item a:hover::before { color: rgba(168,85,247,0.8); }
+.mobile-menu .menu-item a:hover::after { transform: translateY(-50%) scaleY(1); }
+
+.mobile-menu .menu-cta {
+  position: relative; z-index: 1;
+  margin: 40px 36px 0;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.0s, transform 0.0s;
+}
+.mobile-menu.open .menu-cta {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.45s ease 0.54s, transform 0.45s cubic-bezier(0.23,1,0.32,1) 0.54s;
+}
+.btn-contact-mobile {
+  display: inline-block; padding: 14px 32px;
+  background: linear-gradient(135deg, #2667b2, #202a99);
+  color: #fff; font-family: "Google Sans Code", monospace;
+  font-weight: 600; font-size: 0.9rem;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  border-radius: 2px; text-decoration: none;
+  box-shadow: 0 0 24px rgba(38,103,178,0.4), 0 0 60px rgba(32,42,153,0.2);
+  transition: box-shadow 0.25s, transform 0.2s;
+}
+.btn-contact-mobile:hover { box-shadow: 0 0 36px rgba(96,165,250,0.5), 0 0 80px rgba(168,85,247,0.25); transform: translateY(-1px); }
+
+.menu-corner-glyph {
+  position: absolute; bottom: 32px; right: 28px; z-index: 1;
+  opacity: 0; transition: opacity 0.4s ease 0.6s;
+  font-size: 0.58rem; letter-spacing: 0.18em; color: rgba(60,120,255,0.25);
+  font-family: "Google Sans Code", monospace; text-align: right; line-height: 1.8;
+}
+.mobile-menu.open .menu-corner-glyph { opacity: 1; }
+
+@media (max-width: 768px) {
+  .nav-center { display: none; }
+  .btn-contact { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu { display: flex; }
+  .menu-backdrop { display: block; }
+}
+
+/* ── SCENE ── */
+#scroll-container { height: 280vh; position: relative; }
+#sticky-scene { position: sticky; top: 0; left: 0; width: 100%; height: 100vh; overflow: hidden; z-index: 1; transition: opacity 0.6s ease; }
+#canvas { position: absolute; inset: 0; }
+.vignette { position: absolute; inset: 0; pointer-events: none; z-index: 2; background: radial-gradient(ellipse 65% 65% at 50% 50%, transparent 8%, rgba(0,0,8,0.88) 100%); }
+
+/* ── UI ── */
+#hero-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 0 24px; }
+.hero-title { font-weight: 700; font-size: clamp(2rem, 5vw, 4rem); text-align: center; color: #f0e8ff; line-height: 1.15; text-shadow: 0 0 80px rgba(40,100,255,0.35), 0 4px 40px rgba(0,0,0,0.9); opacity: 0; transform: translateY(50px); will-change: opacity, transform; }
+.hero-sub { font-style: italic; font-size: clamp(1rem, 2vw, 1.3rem); color: rgba(180,210,255,0.65); text-align: center; max-width: 540px; opacity: 0; transform: translateY(40px); font-family: 'Cormorant Garamond', serif; will-change: opacity, transform; }
+
+.story-panel { position: absolute; inset: 0; z-index: 6; pointer-events: none; display: flex; align-items: center; justify-content: center; padding: 0 10vw; opacity: 0; will-change: opacity, transform; }
+.panel-tag { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(80,150,255,0.6); margin-bottom: 20px; display: block; }
+.panel-num { font-size: clamp(4rem, 10vw, 9rem); font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(60,120,255,0.15); position: absolute; right: 10vw; top: 50%; transform: translateY(-50%); }
+.panel-title { font-size: clamp(2rem, 6vw, 3rem); font-weight: 700; color: #e8f0ff; margin-bottom: 24px; }
+.panel-desc { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(180,210,255,0.55); line-height: 1.7; margin-top: 4px; }
+
+/* ── AGENT ── */
+#panel-terminal { position: absolute; inset: 0; z-index: 6; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; }
+
+.agent-chat-window {
+  width: min(560px, 92vw);
+  position: relative; z-index: 1;
+  background: rgba(4, 8, 28, 0.82);
+  border: 1px solid rgba(60, 120, 255, 0.28);
+  border-radius: 16px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 0 1px rgba(168,85,247,0.08), 0 32px 80px rgba(0,0,20,0.7), 0 0 60px rgba(30,80,255,0.08);
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+.agent-titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(8, 14, 48, 0.9);
+  border-bottom: 1px solid rgba(60,120,255,0.15);
+}
+.agent-dots { display: flex; gap: 7px; align-items: center; }
+.agent-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(60,120,255,0.25); border: 1px solid rgba(60,120,255,0.4); }
+.agent-dots span:nth-child(1) { background: rgba(255,80,80,0.5); border-color: rgba(255,80,80,0.6); }
+.agent-dots span:nth-child(2) { background: rgba(255,180,40,0.5); border-color: rgba(255,180,40,0.6); }
+.agent-dots span:nth-child(3) { background: rgba(40,200,100,0.5); border-color: rgba(40,200,100,0.6); }
+.agent-title-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(120,160,255,0.5); font-family: "Google Sans Code", monospace; }
+.agent-status { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; letter-spacing: 0.12em; color: rgba(80,200,120,0.7); font-family: "Google Sans Code", monospace; }
+.agent-status-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(80,200,120,0.8); box-shadow: 0 0 6px rgba(80,200,120,0.6); animation: statusPulse 2s ease-in-out infinite; }
+@keyframes statusPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.agent-messages { padding: 28px 24px 20px; min-height: 180px; display: flex; flex-direction: column; gap: 16px; }
+.agent-msg-row { display: flex; align-items: flex-start; gap: 12px; }
+.agent-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, #1a4fff, #6020c0); border: 1px solid rgba(96,165,250,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: rgba(200,220,255,0.9); font-family: "Google Sans Code", monospace; letter-spacing: 0.05em; }
+.agent-bubble { background: rgba(16, 28, 72, 0.7); border: 1px solid rgba(60,120,255,0.18); border-radius: 4px 14px 14px 14px; padding: 12px 16px; font-size: clamp(0.88rem, 2vw, 1rem); color: rgba(200,220,255,0.85); font-family: "Google Sans Code", monospace; line-height: 1.6; width: 85%; box-sizing: border-box; }
+.agent-bubble .bubble-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(96,165,250,0.5); margin-bottom: 6px; display: block; }
+.bubble-cursor { display: inline-block; width: 2px; height: 0.95em; background: rgba(96,165,250,0.8); margin-left: 2px; vertical-align: middle; animation: cursorBlink 0.9s step-end infinite; }
+.bubble-cursor.done { display: none; }
+.agent-divider { height: 1px; margin: 0 20px; background: linear-gradient(90deg, transparent, rgba(60,120,255,0.2), transparent); }
+.agent-input-row { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(6, 10, 36, 0.6); }
+.agent-typebox { flex: 1; display: flex; align-items: center; background: rgba(12, 20, 60, 0.8); border: 1px solid rgba(60, 120, 255, 0.32); border-radius: 50px; padding: 12px 20px; min-height: 48px; box-shadow: inset 0 0 20px rgba(30,80,255,0.06); cursor: text; }
+.agent-typed-text { flex: 1; font-size: clamp(0.92rem, 2.2vw, 1rem); font-weight: 500; color: #e8f0ff; font-family: "Google Sans Code", monospace; white-space: nowrap; overflow: hidden; outline: none; min-width: 10px; }
+.agent-placeholder { color: rgba(120, 160, 255, 0.35); font-weight: 400; }
+.agent-type-cursor { display: inline-block; width: 2px; height: 1.1em; background: rgba(80, 160, 255, 0.9); animation: cursorBlink 0.9s step-end infinite; margin-right: 6px; flex-shrink: 0; }
+@keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.agent-send-btn { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, #2667b2, #202a99); border: 1px solid rgba(96,165,250,0.3); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(38,103,178,0.4); }
+.agent-send-btn svg { width: 16px; height: 16px; fill: none; stroke: rgba(200,220,255,0.85); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+
+
+#overlay-fade { position: fixed; inset: 0; z-index: 99; background: #00000a; pointer-events: none; }
+
+/* ── REVEAL SECTION ── */
+#reveal-section { position: relative; background: transparent; }
+#reveal-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 1; opacity: 0; }
+.reveal-vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 2; opacity: 0; background: radial-gradient(ellipse 65% 65% at 50% 50%, transparent 8%, rgba(0,0,8,0.88) 100%); }
+
+.reveal-row { position: relative; z-index: 10; min-height: 100vh; display: flex; align-items: center; padding: 120px 8vw; }
+.reveal-row-left  { justify-content: flex-start; }
+.reveal-row-right { justify-content: flex-end; }
+
+.reveal-text-inner { max-width: 400px; opacity: 0; will-change: opacity, transform; }
+.reveal-row-left  .reveal-text-inner { transform: translateX(-60px); }
+.reveal-row-right .reveal-text-inner { transform: translateX(60px); }
+
+.reveal-tag   { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(80,150,255,0.6); display: block; margin-bottom: 14px; }
+.reveal-title { font-weight: 500; font-size: clamp(1.8rem, 4vw, 1.5rem); color: #e8f0ff; line-height: 1.15; text-shadow: 0 0 60px rgba(40,100,255,0.35), 0 4px 30px rgba(0,0,0,0.9); margin-bottom: 16px; }
+.reveal-desc  { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(180,210,255,0.55); line-height: 1.7; }
+
+/* ── FOOTER ── */
+#site-footer {
+  position: relative;
+  background: #00000a;
+  overflow: hidden;
+  padding: 0;
+  z-index: 20;
+}
+
+.footer-glow {
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 400px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(26,127,255,0.13) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.footer-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 100px 8vw 60px;
+}
+
+.footer-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 64px;
+  flex-wrap: wrap;
+}
+
+.footer-wordmark {
+  font-family: 'Google Sans Code', monospace;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  /* color: transparent;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(80,140,255,0.7) 60%, rgba(26,100,255,0.4) 100%);
+  -webkit-background-clip: text;
+  background-clip: text; */
+  color: #fff;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.footer-manifesto {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: rgba(180,210,255,0.45);
+  line-height: 1.65;
+  text-align: right;
+  max-width: 320px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(40,100,255,0.25) 30%, rgba(40,100,255,0.25) 70%, transparent);
+  margin-bottom: 52px;
+}
+
+.footer-mid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 40px 48px;
+  margin-bottom: 52px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.footer-col { display: flex; flex-direction: column; gap: 12px; }
+.footer-col-label {
+  font-family: 'Google Sans Code', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(80,150,255,0.5);
+  margin-bottom: 4px;
+}
+.footer-col a {
+  font-size: 0.9rem;
+  color: rgba(180,200,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+  display: inline-block;
+}
+.footer-col a:hover { color: rgba(220,235,255,0.9); transform: translateX(4px); }
+
+.footer-cta-col {
+  display: flex; flex-direction: column;
+  justify-content: flex-end; gap: 16px;
+  min-width: 200px;
+}
+.footer-cta-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: rgba(180,210,255,0.5);
+}
+.footer-cta-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #2667b2, #202a99);
+  color: rgba(210,230,255,0.92);
+  font-family: 'Google Sans Code', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid rgba(60,120,255,0.3);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+.footer-cta-btn:hover {
+  border-color: rgba(80,160,255,0.7);
+  box-shadow: 0 0 28px rgba(26,127,255,0.3);
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  opacity: 0;
+}
+.footer-legal  { font-size: 0.72rem; color: rgba(100,130,200,0.35); letter-spacing: 0.05em; }
+.footer-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: rgba(100,130,200,0.3); }
+
+.footer-bg-text {
+  position: absolute;
+  bottom: -0.15em; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Google Sans Code', monospace;
+  font-size: clamp(8rem, 22vw, 18rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(30,80,200,0.08);
+  text-stroke: 1px rgba(30,80,200,0.08);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .footer-top { flex-direction: column; align-items: flex-start; }
+  .footer-manifesto { text-align: left; }
+  .footer-mid { grid-template-columns: 1fr 1fr; }
+  .footer-cta-col { grid-column: 1 / -1; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="overlay-fade"></div>
+
+<header class="main-header">
+  <div class="logo">al-ai.ai</div>
+  <nav class="nav-center">
+    <a href="#">About</a>
+    <a href="#">Our manifesto</a>
+    <a href="#">Blog & Resources</a>
+  </nav>
+  <a href="#" class="btn-contact">Contact Us</a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="menu-backdrop" id="menuBackdrop"></div>
+<nav class="mobile-menu" id="mobileMenu">
+  <div class="menu-items">
+    <div class="menu-item"><a href="#" data-num="01">About</a></div>
+    <div class="menu-item"><a href="#" data-num="02">Our manifesto</a></div>
+    <div class="menu-item"><a href="#" data-num="03">Blog &amp; Resources</a></div>
+  </div>
+  <div class="menu-cta">
+    <a href="#" class="btn-contact-mobile">Contact Us</a>
+  </div>
+  <div class="menu-corner-glyph">al-ai.ai<br>v2.0.1<br>© 2025</div>
+</nav>
+
+<div id="scroll-container">
+  <div id="sticky-scene">
+    <canvas id="canvas"></canvas>
+    <div class="vignette"></div>
+
+    <div id="hero-layer">
+      <h1 class="hero-title" id="heroTitle">Revenue Is The Truth<br><span class="accent">Ignore The Noise</span></h1>
+      <p class="hero-sub" id="heroSub">18 years in digital marketing. 7 years in AI. We watched the industry invent new words to hide old results.</p>
+    </div>
+
+    <div class="story-panel" id="panel1">
+      <div class="panel-inner" style="text-align: center;">
+        <span class="panel-tag" id="p1tag">We were expecting You</span>
+        <h2 class="panel-title" id="p1title">We Were Expecting You!</h2>
+        <p class="panel-desc" id="p1desc">Most visitors arrive with the same problem.<br>They just describe it differently.</p>
+      </div>
+   
+    </div>
+
+    <div class="story-panel" id="panel-terminal">
+      <div class="agent-chat-window" id="terminalWindow">
+
+        <!-- title bar -->
+        <div class="agent-titlebar">
+          <div class="agent-dots"><span></span><span></span><span></span></div>
+          <span class="agent-title-label">al-ai · agent</span>
+          <div class="agent-status"><span class="agent-status-dot"></span>online</div>
+        </div>
+
+        <!-- message thread -->
+        <div class="agent-messages">
+          <div class="agent-msg-row">
+            <div class="agent-avatar">AI</div>
+            <div class="agent-bubble" id="agentBubble">
+              <span class="bubble-label">al-ai agent</span>
+              <span id="bubbleTypedText"></span><span class="bubble-cursor" id="bubbleCursor"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="agent-divider"></div>
+
+        <!-- input row -->
+        <div class="agent-input-row">
+          <div class="agent-typebox" id="tl1">
+            <span class="agent-type-cursor" id="agentTypeCursor"></span>
+            <span class="agent-typed-text agent-placeholder" id="agentTypedText" contenteditable="true" spellcheck="false">Reply...</span>
+          </div>
+          <div class="agent-send-btn">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="story-panel" id="panel2">
+      <div class="panel-inner">
+        <span class="panel-tag" id="p2tag">Call Us</span>
+        <h2 class="panel-title" id="p2title">What you want, Crazy, Bold, Arrogant</h2>
+        <p class="panel-desc" id="p2desc">If it is efficient and getting results, then why not?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── REVEAL SECTION: normal scroll, canvas fills section, ball drifts down ── -->
+<div id="reveal-section">
+
+  <canvas id="reveal-canvas"></canvas>
+  <div class="reveal-vignette"></div>
+
+  <div class="reveal-row reveal-row-left">
+    <div class="reveal-text-inner" id="reveal-text-1">
+      <span class="reveal-tag">The Foundation</span>
+      <h2 class="reveal-title">Call Us what you want, Crazy, Bold, arogant
+      Disagree with many ideas and concepts</h2>
+      <p class="reveal-desc">But there is one Fact we cant ignore, If it is effecient and getting the desired results, Then Why Not?
+      For those who is waiting the ethical statement: Really!!</p>
+    </div>
+  </div>
+
+  <div class="reveal-row reveal-row-right">
+    <div class="reveal-text-inner" id="reveal-text-2">
+      <span class="reveal-tag">The Method</span>
+      <h2 class="reveal-title">No one knows the possible, but what is it is applicable
+      it should not be a Mystery</h2>
+      <p class="reveal-desc">"You Dont look for revenue, You want 'Feeling'?
+      Go hire a poet, you still in 2021
+      We engineer the invisible layer between your messy (or not) data and
+      your bank account ,your Prospect Customer as they also Knows this fact</p>
+    </div>
+  </div>
+
+  <div class="reveal-row reveal-row-left">
+    <div class="reveal-text-inner" id="reveal-text-3">
+      <span class="reveal-tag">The Promise</span>
+      <h2 class="reveal-title">The Choas and Rot in Overwhelming Ai world</h2>
+      <p class="reveal-desc">
+      &dot; There is No common name of anything.<br />
+      &dot; There is No common Concept of anything.<br />
+      &dot; There is No common Reference of anything.<br />
+      &dot; There is No common Framework of anything.<br />
+      &dot; There is No common Standarres of anything.<br />
+      &dot; Even if they exist, the translator keep changing.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer id="site-footer">
+  <div class="footer-glow"></div>
+
+  <div class="footer-inner">
+
+    <div class="footer-top">
+      <div class="footer-wordmark">al-ai.ai</div>
+      <p class="footer-manifesto">
+        We don't follow the market.<br>We move before it does.
+      </p>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-mid">
+      <div class="footer-col">
+        <span class="footer-col-label">Company</span>
+        <a href="#">About</a>
+        <a href="#">Our Manifesto</a>
+        <a href="#">Blog &amp; Resources</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <span class="footer-col-label">Services</span>
+        <a href="#">Data-Driven AI Solution</a>
+        <a href="#">Agentic AI & Agent Systems</a>
+        <a href="#">Conversational & Edge Analytics</a>
+      </div>
+      <div class="footer-col">
+        <span class="footer-col-label">Connect</span>
+        <a href="#">LinkedIn</a>
+        <a href="#">Twitter / X</a>
+        <a href="#"><span class="__cf_email__" data-cfemail="9af2fff6f6f5dafbf6b7fbf3b4fbf3">[email&#160;protected]</span></a>
+      </div>
+      <div class="footer-cta-col">
+        <p class="footer-cta-label">Ready to move?</p>
+        <a href="#" class="footer-cta-btn">Start a conversation</a>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <span class="footer-legal">© 2026 al-ai.ai — All rights reserved.</span>
+      <span class="footer-tagline">Built for revenue. Designed for the bold.</span>
+    </div>
+
+  </div>
+
+  <div class="footer-bg-text" aria-hidden="true">al-ai</div>
+</footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+(function () {
+  const canvas = document.getElementById('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x00000a);
+  scene.fog = new THREE.FogExp2(0x00000a, 0.022);
+
+  const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 9);
+
+  const scrollState = { progress: 0 };
+  scene.add(new THREE.AmbientLight(0x000510, 0.12));
+  const centerLight = new THREE.PointLight(0x0a2fff, 3.5, 14);
+  centerLight.position.set(0, 0, 4);
+  scene.add(centerLight);
+
+  /* ── 4 FLOATING STONES (BLOBS) – visible in both phases ── */
+  function noise3(x, y, z) { return Math.sin(x*1.7+y*0.9)*Math.cos(y*2.3+z*1.1)*Math.sin(z*1.4+x*0.8); }
+  function makeBlob(radius, pos, seed, sx, sy, sz) {
+    const geo = new THREE.SphereGeometry(radius, 48, 48);
+    const pa = geo.attributes.position.array;
+    for (let i = 0; i < pa.length; i += 3) {
+      const x=pa[i], y=pa[i+1], z=pa[i+2], l=Math.sqrt(x*x+y*y+z*z);
+      const nx=x/l, ny=y/l, nz=z/l;
+      const d = 1.0 + noise3(nx*2.1+seed, ny*2.1, nz*2.1)*0.4 + noise3(nx*4.3+seed*0.5, ny*4.3+seed, nz*4.3)*0.18 + noise3(nx*8.5, ny*8.5+seed, nz*8.5+seed)*0.06;
+      pa[i]=nx*radius*d*sx; pa[i+1]=ny*radius*d*sy; pa[i+2]=nz*radius*d*sz;
+    }
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x00000a, roughness: 1, metalness: 0, transparent: true }));
+    mesh.position.set(...pos);
+    scene.add(mesh);
+    // Rim Glow Restored
+    const rimGeo = geo.clone();
+    mesh.add(new THREE.Mesh(rimGeo, new THREE.ShaderMaterial({
+      transparent:true, side:THREE.FrontSide, depthWrite:false,
+      uniforms:{ uCol:{value:new THREE.Color(0x1a7fff)}, uRP:{value:2.4}, uEP:{value:8.0}, uInt:{value:1.1} },
+      vertexShader:`varying vec3 vN,vV,vW; void main(){ vec4 wp=modelMatrix*vec4(position,1.); vW=wp.xyz; vV=normalize(cameraPosition-wp.xyz); vN=normalize((modelMatrix*vec4(normal,0.)).xyz); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+      fragmentShader:`uniform vec3 uCol; uniform float uRP,uEP,uInt; varying vec3 vN,vV,vW; void main(){ float NdV=clamp(dot(vN,vV),0.,1.); float rim=pow(1.-NdV,uRP); vec3 toC=normalize(-vW); float face=clamp(dot(vN,toC)+0.35,0.,1.); float edge=pow(1.-NdV,uEP)*face*4.0; float glow=rim*face*0.7; float a=(edge+glow)*uInt; gl_FragColor=vec4(uCol*(1.+edge*1.2),a); }`,
+    })));
+    return mesh;
+  }
+  const orbDefs = [
+    { radius:2.3, pos:[-4.9, 3.2,-0.2], seed:1.1, sx:1.0, sy:1.18, sz:0.82 },
+    { radius:2.1, pos:[ 4.7, 3.3,-0.5], seed:2.7, sx:0.9, sy:1.22, sz:0.78 },
+    { radius:2.2, pos:[-4.8,-3.2,-0.3], seed:4.2, sx:1.05, sy:1.12, sz:0.88 },
+    { radius:2.0, pos:[ 4.9,-3.0,-0.4], seed:3.5, sx:0.95, sy:1.20, sz:0.80 }
+  ];
+  const orbs = orbDefs.map(d => makeBlob(d.radius, d.pos, d.seed, d.sx, d.sy, d.sz));
+  const orbOrigins = orbs.map(o => ({x:o.position.x, y:o.position.y, z:o.position.z}));
+  const floatData = orbs.map((_,i) => ({ speed:0.55+i*0.15, phase:i*1.57 }));
+
+  /* ── PARTICLES SYSTEM – will hide when fully gathered ── */
+  const pCount = 1600;
+  const pGathered = new Float32Array(pCount * 3), pScattered = new Float32Array(pCount * 3), pCurrent = new Float32Array(pCount * 3);
+  const pCol = new Float32Array(pCount * 3), pPhase = new Float32Array(pCount);
+  for (let i = 0; i < pCount; i++) {
+    pPhase[i] = Math.random() * Math.PI * 2;
+    const gR = 0.08 + Math.pow(Math.random(), 0.6) * 1.3, theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+    pGathered[i*3] = gR * Math.sin(phi) * Math.cos(theta);
+    pGathered[i*3+1] = gR * Math.sin(phi) * Math.sin(theta);
+    pGathered[i*3+2] = gR * Math.cos(phi);
+    const sR = 3.5 + Math.random() * 18.0;
+    pScattered[i*3] = sR * Math.sin(phi) * Math.cos(theta);
+    pScattered[i*3+1] = sR * Math.sin(phi) * Math.sin(theta);
+    pScattered[i*3+2] = sR * Math.cos(phi);
+    const roll = Math.random();
+    if (roll < 0.5) { pCol[i*3]=0.01; pCol[i*3+1]=0.05; pCol[i*3+2]=0.4; }
+    else if (roll < 0.8) { pCol[i*3]=0.05; pCol[i*3+1]=0.4; pCol[i*3+2]=1.0; }
+    else { pCol[i*3]=0.8; pCol[i*3+1]=0.9; pCol[i*3+2]=1.0; }
+  }
+  const pCanvas = document.createElement('canvas'); pCanvas.width = 32; pCanvas.height = 32;
+  const pCtx = pCanvas.getContext('2d');
+  const grad = pCtx.createRadialGradient(16,16,0, 16,16,16); grad.addColorStop(0,'white'); grad.addColorStop(1,'transparent');
+  pCtx.fillStyle = grad; pCtx.fillRect(0,0,32,32);
+  const pTex = new THREE.CanvasTexture(pCanvas);
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pCurrent, 3));
+  pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+  const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ size: 0.28, map: pTex, vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+  scene.add(particles);
+
+  // Pre-fill pCurrent with gathered positions so first frame is the ball
+  for (let i = 0; i < pCount; i++) {
+    pCurrent[i*3]   = pGathered[i*3];
+    pCurrent[i*3+1] = pGathered[i*3+1];
+    pCurrent[i*3+2] = pGathered[i*3+2];
+  }
+  pGeo.attributes.position.needsUpdate = true;
+
+  const camPath = [
+    { sp: 0.00, z: 9 },
+    { sp: 0.35, z: 6.0 },
+    { sp: 0.50, z: 9 },
+    { sp: 0.80, z: 9 },
+    { sp: 1.00, z: 7.0 }
+  ];
+
+  const clock = new THREE.Clock();
+  function eio(v) { v=Math.max(0,Math.min(1,v)); return v < 0.5 ? 2*v*v : 1 - Math.pow(-2*v+2,2)/2; }
+  function animate() {
+    if (_heroActive) requestAnimationFrame(animate);
+    const sp = scrollState.progress;
+    const t = clock.getElapsedTime();
+
+    let a = camPath[0], b = camPath[camPath.length-1];
+    for (let i = 0; i < camPath.length-1; i++) { if (sp >= camPath[i].sp && sp <= camPath[i+1].sp) { a=camPath[i]; b=camPath[i+1]; break; } }
+    const pct = (sp - a.sp) / (b.sp - a.sp || 1);
+    const pctE = pct < 0.5 ? 2*pct*pct : 1 - Math.pow(-2*pct+2,2)/2;
+    camera.position.z = a.z + (b.z - a.z) * pctE;
+
+    let particleAlpha = 0.9;
+    let explodeT = 0;
+
+    if (sp < 0.20) {
+      explodeT = 1 - Math.pow(1 - sp / 0.20, 3);
+      const t0 = sp / 0.20;
+      particleAlpha = 0.9 * (1 - t0 * t0 * 0.5);
+    } else if (sp < 0.50) {
+      explodeT = 1.0;
+      const fadeIn = sp < 0.32 ? (sp - 0.20) / 0.12 : 1.0;
+      particleAlpha = sp < 0.32 ? 0.45 + 0.45 * (fadeIn * fadeIn) : 0.9;
+    } else if (sp < 0.64) {
+      explodeT = 1.0;
+      const fadeOut = (sp - 0.50) / 0.14;
+      particleAlpha = 0.9 * (1.0 - fadeOut * fadeOut * (3 - 2 * fadeOut));
+    } else {
+      explodeT = 1.0;
+      particleAlpha = 0.0;
+    }
+
+    for (let i = 0; i < pCount; i++) {
+      const gx = pGathered[i*3], gy = pGathered[i*3+1], gz = pGathered[i*3+2];
+      const sx = pScattered[i*3], sy = pScattered[i*3+1], sz = pScattered[i*3+2];
+      pCurrent[i*3]   = gx + (sx - gx) * explodeT;
+      pCurrent[i*3+1] = gy + (sy - gy) * explodeT;
+      pCurrent[i*3+2] = gz + (sz - gz) * explodeT;
+    }
+    pGeo.attributes.position.needsUpdate = true;
+    particles.rotation.y = t * 0.1;
+    particles.position.y = 0;
+    particles.material.opacity = particleAlpha;
+
+    camera.position.y = 0;
+    camera.lookAt(0, 0, 0);
+
+    /* eio moved outside loop */
+    const cornerTargets = [
+      { x: -16, y: 4.0 }, { x:  16, y: 4.0 },
+      { x: -16, y: -4.0 }, { x:  16, y: -4.0 },
+    ];
+    const peekTargets = [
+      { x: -5.2, y: 4.0 }, { x:  5.2, y: 4.0 },
+      { x: -5.2, y: -4.0 }, { x:  5.2, y: -4.0 },
+    ];
+
+    orbs.forEach((orb, i) => {
+      const d = floatData[i], ox = orbOrigins[i];
+      const ct = cornerTargets[i], pk = peekTargets[i];
+      const floatX = Math.cos(t * d.speed * 0.7 + d.phase) * 0.08;
+      const floatY = Math.sin(t * d.speed + d.phase) * 0.18;
+      let tx = ox.x, ty = ox.y, tz = ox.z;
+
+      if (sp < 0.20) {
+        const e = eio(sp / 0.20);
+        tx = ox.x + (ct.x - ox.x) * e; ty = ox.y + (ct.y - ox.y) * e;
+      } else if (sp < 0.64) {
+        tx = ct.x; ty = ct.y;
+      } else if (sp < 0.80) {
+        const e = eio((sp - 0.64) / 0.16);
+        tx = ct.x + (pk.x - ct.x) * e; ty = ct.y + (pk.y - ct.y) * e;
+      } else if (sp < 0.90) {
+        tx = pk.x; ty = pk.y;
+      } else {
+        const e = eio((sp - 0.90) / 0.10);
+        tx = pk.x + (ct.x - pk.x) * e; ty = pk.y + (ct.y - pk.y) * e;
+      }
+
+      const nearOrigin = sp < 0.20 ? 1.0 - sp / 0.20 : 0.0;
+      const atPeek = (sp >= 0.80 && sp < 0.90) ? 0.4 : 0.0;
+      const floatBlend = Math.max(nearOrigin, atPeek);
+
+      orb.position.x = tx + floatX * floatBlend;
+      orb.position.y = ty + floatY * floatBlend;
+      orb.position.z = tz;
+      orb.visible = true;
+      orb.material.opacity = 1.0;
+      if (orb.children[0]) orb.children[0].material.uniforms.uInt.value = 1.1;
+    });
+
+    renderer.render(scene, camera);
+  }
+  let _heroActive = true;
+  const _heroObs = new IntersectionObserver(entries => {
+    _heroActive = entries[0].isIntersecting;
+    if (_heroActive) animate();
+  }, { threshold: 0.01 });
+  _heroObs.observe(document.getElementById('scroll-container'));
+  animate();
+
+  /* ── ALWAYS START FROM TOP ON LOAD ── */
+  if (history.scrollRestoration) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  /* ── SEAMLESS GSAP TIMELINE ── */
+  const masterTl = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } });
+  // Timeline runs 0→1, matching scroll progress exactly.
+  // All positions and durations below are in those 0–1 units.
+  masterTl
+    .to("#heroTitle, #heroSub", { opacity: 0, y: -30, duration: 0.09, ease: "power2.in" }, 0.00)
+    .fromTo("#panel1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.22)
+    .to("#panel1", { opacity: 0, y: -20, duration: 0.14, ease: "power2.in" }, 0.50)
+    .fromTo("#panel-terminal", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.18, ease: "power3.out" }, 0.64)
+    .to("#panel-terminal", { opacity: 0, y: -30, duration: 0.18, ease: "power3.in" }, 0.88)
+    .to({}, { duration: 0.01 }, 0.99);
+
+  // Force all panels to correct initial hidden state
+  gsap.set("#panel1, #panel-terminal, #panel2", { opacity: 0 });
+  gsap.set("#heroTitle, #heroSub", { opacity: 0, y: 50 });
+
+  let agentEntranceFired = false;
+
+  ScrollTrigger.create({
+    trigger: "#scroll-container", start: "top top", end: "bottom bottom", scrub: 1.8,
+    onUpdate: self => {
+      scrollState.progress = self.progress;
+      masterTl.progress(self.progress);
+
+      // Fire typing once when agent panel appears
+      if (self.progress > 0.64 && !agentEntranceFired) {
+        agentEntranceFired = true;
+
+        // Type the bubble message
+        const bubbleText = document.getElementById('bubbleTypedText');
+        const bubbleCursor = document.getElementById('bubbleCursor');
+        const msg = "What brings you here today?";
+        let bi = 0;
+        // Reset in case of re-trigger
+        bubbleText.textContent = '';
+        bubbleCursor.classList.remove('done');
+        function typeBubble() {
+          if (bi < msg.length) {
+            bubbleText.textContent += msg[bi++];
+            setTimeout(typeBubble, 28 + Math.random() * 18);
+          } else {
+            bubbleCursor.classList.add('done');
+          }
+        }
+        setTimeout(typeBubble, 200);
+      }
+    }
+  });
+
+  gsap.to("#overlay-fade", { opacity: 0, duration: 1.5 });
+  gsap.to("#heroTitle, #heroSub", { opacity: 1, y: 0, duration: 1, stagger: 0.2 });
+
+  /* ── single ScrollTrigger owns reveal canvas opacity for its entire lifecycle ── */
+  // Phase 1: hero fades out, reveal fades IN (top 80% → top top)
+  ScrollTrigger.create({
+    trigger: "#reveal-section",
+    start: "top 80%",
+    end: "top top",
+    scrub: true,
+    onUpdate: self => {
+      const p = self.progress;
+      document.getElementById('sticky-scene').style.opacity = 1 - p;
+      document.getElementById('reveal-canvas').style.opacity = p;
+      document.querySelector('.reveal-vignette').style.opacity = p;
+    },
+    onLeave: () => {
+      // fully entered — lock at 1 so nothing can fight it
+      document.getElementById('reveal-canvas').style.opacity = '1';
+      document.querySelector('.reveal-vignette').style.opacity = '1';
+      document.getElementById('sticky-scene').style.opacity = '0';
+    },
+    onEnterBack: () => {
+      document.getElementById('reveal-canvas').style.opacity = '1';
+      document.querySelector('.reveal-vignette').style.opacity = '1';
+    }
+  });
+
+  // Phase 2: reveal fades OUT at the very bottom of the section
+  ScrollTrigger.create({
+    trigger: "#reveal-section",
+    start: "bottom 60%",
+    end: "bottom top",
+    scrub: true,
+    onUpdate: self => {
+      const p = 1 - self.progress;
+      document.getElementById('reveal-canvas').style.opacity = p;
+      document.querySelector('.reveal-vignette').style.opacity = p;
+    },
+    onLeaveBack: () => {
+      document.getElementById('reveal-canvas').style.opacity = '1';
+      document.querySelector('.reveal-vignette').style.opacity = '1';
+    }
+  });
+
+  // ── MOBILE MENU TOGGLE ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  function openMenu() {
+    hamburger.classList.add('open');
+    mobileMenu.classList.add('open');
+    menuBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    menuBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  menuBackdrop.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+
+  /* ── FOOTER ANIMATIONS ── */
+  gsap.to('.footer-wordmark', {
+    opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#site-footer', start: 'top 85%' }
+  });
+  gsap.to('.footer-manifesto', {
+    opacity: 1, y: 0, duration: 1.1, delay: 0.15, ease: 'power3.out',
+    scrollTrigger: { trigger: '#site-footer', start: 'top 85%' }
+  });
+  gsap.to('.footer-mid', {
+    opacity: 1, y: 0, duration: 0.9, delay: 0.3, ease: 'power3.out',
+    scrollTrigger: { trigger: '.footer-mid', start: 'top 90%' }
+  });
+  gsap.to('.footer-bottom', {
+    opacity: 1, duration: 0.8, delay: 0.5, ease: 'power2.out',
+    scrollTrigger: { trigger: '.footer-bottom', start: 'top 95%' }
+  });
+
+  /* ── AGENT INPUT PLACEHOLDER BEHAVIOUR ── */
+  const agentInput = document.getElementById('agentTypedText');
+  if (agentInput) {
+    agentInput.addEventListener('focus', function() {
+      if (this.classList.contains('agent-placeholder')) {
+        this.textContent = '';
+        this.classList.remove('agent-placeholder');
+      }
+    });
+    agentInput.addEventListener('blur', function() {
+      if (!this.textContent.trim()) {
+        this.textContent = 'Reply...';
+        this.classList.add('agent-placeholder');
+      }
+    });
+  }
+
+})();
+
+/* ══════════════════════════════════════════
+   REVEAL SCENE — Three.js, same shapes as hero, camera drifts with scroll
+   ══════════════════════════════════════════ */
+(function () {
+  const section   = document.getElementById('reveal-section');
+  const canvas2   = document.getElementById('reveal-canvas');
+  const vignette2 = document.querySelector('.reveal-vignette');
+
+  const renderer2 = new THREE.WebGLRenderer({ canvas: canvas2, antialias: true, alpha: false, powerPreference: 'high-performance' });
+  renderer2.setSize(window.innerWidth, window.innerHeight);
+  renderer2.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer2.toneMapping = THREE.ACESFilmicToneMapping;
+
+  const scene2 = new THREE.Scene();
+  scene2.background = new THREE.Color(0x00000a);
+  scene2.fog = new THREE.FogExp2(0x00000a, 0.022);
+
+  const cam2 = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.1, 200);
+  cam2.position.set(0, 0, 9);
+
+  scene2.add(new THREE.AmbientLight(0x000510, 0.12));
+  const cLight2 = new THREE.PointLight(0x0a2fff, 3.5, 14);
+  cLight2.position.set(0, 0, 4);
+  scene2.add(cLight2);
+
+  let _resizeTimer2;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer2);
+    _resizeTimer2 = setTimeout(() => {
+      renderer2.setSize(window.innerWidth, window.innerHeight);
+      cam2.aspect = window.innerWidth / window.innerHeight;
+      cam2.updateProjectionMatrix();
+    }, 150);
+  });
+
+  /* ── exact same blob factory as hero ── */
+  function noise3(x, y, z) { return Math.sin(x*1.7+y*0.9)*Math.cos(y*2.3+z*1.1)*Math.sin(z*1.4+x*0.8); }
+  function makeBlob2(radius, pos, seed, sx, sy, sz) {
+    const geo = new THREE.SphereGeometry(radius, 48, 48);
+    const pa = geo.attributes.position.array;
+    for (let i = 0; i < pa.length; i += 3) {
+      const x=pa[i], y=pa[i+1], z=pa[i+2], l=Math.sqrt(x*x+y*y+z*z);
+      const nx=x/l, ny=y/l, nz=z/l;
+      const d = 1.0 + noise3(nx*2.1+seed,ny*2.1,nz*2.1)*0.4 + noise3(nx*4.3+seed*0.5,ny*4.3+seed,nz*4.3)*0.18 + noise3(nx*8.5,ny*8.5+seed,nz*8.5+seed)*0.06;
+      pa[i]=nx*radius*d*sx; pa[i+1]=ny*radius*d*sy; pa[i+2]=nz*radius*d*sz;
+    }
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color:0x00000a, roughness:1, metalness:0, transparent:true }));
+    mesh.position.set(...pos);
+    scene2.add(mesh);
+    const rimGeo = geo.clone();
+    mesh.add(new THREE.Mesh(rimGeo, new THREE.ShaderMaterial({
+      transparent:true, side:THREE.FrontSide, depthWrite:false,
+      uniforms:{ uCol:{value:new THREE.Color(0x1a7fff)}, uRP:{value:2.4}, uEP:{value:8.0}, uInt:{value:1.1} },
+      vertexShader:`varying vec3 vN,vV,vW; void main(){ vec4 wp=modelMatrix*vec4(position,1.); vW=wp.xyz; vV=normalize(cameraPosition-wp.xyz); vN=normalize((modelMatrix*vec4(normal,0.)).xyz); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
+      fragmentShader:`uniform vec3 uCol; uniform float uRP,uEP,uInt; varying vec3 vN,vV,vW; void main(){ float NdV=clamp(dot(vN,vV),0.,1.); float rim=pow(1.-NdV,uRP); vec3 toC=normalize(-vW); float face=clamp(dot(vN,toC)+0.35,0.,1.); float edge=pow(1.-NdV,uEP)*face*4.0; float glow=rim*face*0.7; float a=(edge+glow)*uInt; gl_FragColor=vec4(uCol*(1.+edge*1.2),a); }`,
+    })));
+    return mesh;
+  }
+
+  /* ── 18 stones: 9 left, 9 right — one pair per scroll band, covering full reveal section ── */
+  const stoneDefs = [
+    // LEFT — 9 bands, pushed far to edge
+    { radius:2.2, seed:1.1, sx:1.0,  sy:1.18, sz:0.82, x:-5.8, y: 0.0, z:-0.2 },
+    { radius:2.0, seed:2.7, sx:0.9,  sy:1.22, sz:0.78, x:-5.6, y: 0.0, z:-0.5 },
+    { radius:2.1, seed:4.2, sx:1.05, sy:1.12, sz:0.88, x:-5.7, y: 0.0, z:-0.3 },
+    { radius:2.3, seed:6.1, sx:1.0,  sy:1.10, sz:0.90, x:-5.9, y: 0.0, z:-0.1 },
+    { radius:1.9, seed:8.4, sx:0.95, sy:1.25, sz:0.75, x:-5.5, y: 0.0, z:-0.6 },
+    { radius:2.2, seed:9.7, sx:1.08, sy:1.14, sz:0.86, x:-5.8, y: 0.0, z:-0.4 },
+    { radius:2.0, seed:11.2,sx:0.92, sy:1.20, sz:0.80, x:-5.6, y: 0.0, z:-0.2 },
+    { radius:2.1, seed:13.5,sx:1.03, sy:1.16, sz:0.84, x:-5.7, y: 0.0, z:-0.5 },
+    { radius:2.2, seed:15.8,sx:0.98, sy:1.12, sz:0.88, x:-5.9, y: 0.0, z:-0.3 },
+    // RIGHT — 9 bands
+    { radius:2.1, seed:3.5, sx:0.95, sy:1.20, sz:0.80, x: 5.8, y: 0.0, z:-0.4 },
+    { radius:2.2, seed:5.9, sx:1.0,  sy:1.15, sz:0.85, x: 5.6, y: 0.0, z:-0.2 },
+    { radius:2.0, seed:7.3, sx:1.05, sy:1.18, sz:0.82, x: 5.7, y: 0.0, z:-0.5 },
+    { radius:2.3, seed:10.1,sx:0.98, sy:1.10, sz:0.90, x: 5.9, y: 0.0, z:-0.1 },
+    { radius:1.9, seed:12.6,sx:1.02, sy:1.22, sz:0.78, x: 5.5, y: 0.0, z:-0.6 },
+    { radius:2.1, seed:14.3,sx:0.93, sy:1.16, sz:0.84, x: 5.8, y: 0.0, z:-0.3 },
+    { radius:2.2, seed:16.7,sx:1.0,  sy:1.20, sz:0.80, x: 5.6, y: 0.0, z:-0.5 },
+    { radius:2.0, seed:18.0,sx:1.05, sy:1.14, sz:0.86, x: 5.7, y: 0.0, z:-0.2 },
+    { radius:2.1, seed:20.4,sx:0.97, sy:1.18, sz:0.82, x: 5.9, y: 0.0, z:-0.4 },
+  ];
+  // 9 bands total — each stone gets its own band, well spaced
+  const NUM_BANDS = 9;
+  const BAND_SPACING = 6.5;
+  const floatData2 = stoneDefs.map((_,i) => ({ speed:0.45+i*0.07, phase:i*1.05 }));
+  const stones2 = stoneDefs.map(d => makeBlob2(d.radius, [d.x, d.y, d.z], d.seed, d.sx, d.sy, d.sz));
+
+  /* ── exact same particle system as hero ── */
+  const pCount2 = 1600;
+  const pGathered2 = new Float32Array(pCount2*3);
+  const pCurrent2  = new Float32Array(pCount2*3);
+  const pCol2      = new Float32Array(pCount2*3);
+  /* per-particle random phases & speeds for internal drift animation */
+  const pPhase2 = new Float32Array(pCount2*3);
+  const pSpeed2 = new Float32Array(pCount2);
+  const pAmp2   = new Float32Array(pCount2);
+  for (let i = 0; i < pCount2; i++) {
+    const gR = 0.08 + Math.pow(Math.random(), 0.6) * 1.3;
+    const theta = Math.random()*Math.PI*2, phi = Math.acos(2*Math.random()-1);
+    pGathered2[i*3]   = gR*Math.sin(phi)*Math.cos(theta);
+    pGathered2[i*3+1] = gR*Math.sin(phi)*Math.sin(theta);
+    pGathered2[i*3+2] = gR*Math.cos(phi);
+    pCurrent2[i*3]   = pGathered2[i*3];
+    pCurrent2[i*3+1] = pGathered2[i*3+1];
+    pCurrent2[i*3+2] = pGathered2[i*3+2];
+    /* random phase offsets per axis so each particle drifts independently */
+    pPhase2[i*3]   = Math.random()*Math.PI*2;
+    pPhase2[i*3+1] = Math.random()*Math.PI*2;
+    pPhase2[i*3+2] = Math.random()*Math.PI*2;
+    pSpeed2[i] = 0.4 + Math.random() * 0.9;
+    pAmp2[i]   = 0.04 + Math.random() * 0.10; /* drift amplitude — stays tight inside the ball */
+    const roll = Math.random();
+    if (roll < 0.5)      { pCol2[i*3]=0.01; pCol2[i*3+1]=0.05; pCol2[i*3+2]=0.4; }
+    else if (roll < 0.8) { pCol2[i*3]=0.05; pCol2[i*3+1]=0.4;  pCol2[i*3+2]=1.0; }
+    else                 { pCol2[i*3]=0.8;  pCol2[i*3+1]=0.9;  pCol2[i*3+2]=1.0; }
+  }
+  const pCvs2 = document.createElement('canvas'); pCvs2.width=32; pCvs2.height=32;
+  const pCtx2 = pCvs2.getContext('2d');
+  const pg2 = pCtx2.createRadialGradient(16,16,0,16,16,16); pg2.addColorStop(0,'white'); pg2.addColorStop(1,'transparent');
+  pCtx2.fillStyle=pg2; pCtx2.fillRect(0,0,32,32);
+  const pGeo2 = new THREE.BufferGeometry();
+  pGeo2.setAttribute('position', new THREE.BufferAttribute(pCurrent2,3));
+  pGeo2.setAttribute('color',    new THREE.BufferAttribute(pCol2,3));
+  const particles2 = new THREE.Points(pGeo2, new THREE.PointsMaterial({ size:0.28, map:new THREE.CanvasTexture(pCvs2), vertexColors:true, transparent:true, opacity:0.9, depthWrite:false }));
+  scene2.add(particles2);
+
+  const clock2 = new THREE.Clock();
+
+  /* Cache absolute section position from document top */
+  let _cachedSectionTop = section.getBoundingClientRect().top + window.scrollY;
+  let _cachedSectionH   = section.offsetHeight;
+  function _updateSectionCache() {
+    _cachedSectionTop = section.getBoundingClientRect().top + window.scrollY;
+    _cachedSectionH   = section.offsetHeight;
+  }
+  window.addEventListener('scroll', _updateSectionCache, { passive: true });
+  window.addEventListener('resize', _updateSectionCache);
+
+  function animate2() {
+    if (_scene2Active) requestAnimationFrame(animate2);
+    const t = clock2.getElapsedTime();
+
+    /* scrolledInto = how many px we've scrolled past the section's top edge */
+    const scrolledInto = window.scrollY - _cachedSectionTop;
+    /* scrollable = total distance camera must travel to go from section top to section bottom */
+    const scrollable   = _cachedSectionH - window.innerHeight;
+    /* clamp 0→1 across the full reveal section */
+    const scrollFrac   = Math.max(0, Math.min(1, scrolledInto / Math.max(1, scrollable)));
+    const worldRange   = BAND_SPACING * (NUM_BANDS - 1);
+    cam2.position.y = -(scrollFrac * worldRange); /* negative = camera moves down as page scrolls down, stones appear to scroll up */
+    cam2.position.z = 9;
+    cam2.lookAt(0, cam2.position.y, 0);
+    cLight2.position.y = cam2.position.y;
+
+    /* particles stay at camera Y so they're always centered on screen */
+    particles2.position.y = cam2.position.y;
+    particles2.rotation.y = t * 0.1;
+    particles2.material.opacity = 0.9;
+
+    /* per-particle internal drift — each particle oscillates around its gathered position */
+    for (let i = 0; i < pCount2; i++) {
+      const amp = pAmp2[i], spd = pSpeed2[i];
+      pCurrent2[i*3]   = pGathered2[i*3]   + Math.sin(t * spd + pPhase2[i*3])   * amp;
+      pCurrent2[i*3+1] = pGathered2[i*3+1] + Math.sin(t * spd + pPhase2[i*3+1]) * amp;
+      pCurrent2[i*3+2] = pGathered2[i*3+2] + Math.cos(t * spd + pPhase2[i*3+2]) * amp;
+    }
+    pGeo2.attributes.position.needsUpdate = true;
+
+  /* stones: each gets its own band — left[0..8] and right[0..8] at same Y per band */
+  stones2.forEach((mesh, i) => {
+    const d  = stoneDefs[i];
+    const fd = floatData2[i];
+    const floatX = Math.cos(t * fd.speed * 0.7 + fd.phase) * 0.06;
+    const floatY = Math.sin(t * fd.speed       + fd.phase) * 0.15;
+    const band = i % NUM_BANDS;
+    mesh.position.x = d.x + floatX;
+    mesh.position.y = -(band * BAND_SPACING) + floatY; /* negative so bands go downward in world space */
+    mesh.position.z = d.z;
+    if (mesh.children[0]) mesh.children[0].material.uniforms.uInt.value = 1.1;
+  });
+
+    renderer2.render(scene2, cam2);
+  }
+  let _scene2Active = false;
+  const _obs2 = new IntersectionObserver(entries => {
+    _scene2Active = entries[0].isIntersecting;
+    if (_scene2Active) animate2();
+  }, { threshold: 0.01 });
+  _obs2.observe(section);
+
+  /* ── text slide-in via ScrollTrigger ── */
+  gsap.set('#reveal-text-1', { x: -60 });
+  gsap.set('#reveal-text-2', { x:  60 });
+  gsap.set('#reveal-text-3', { x: -60 });
+  ['#reveal-text-1','#reveal-text-2','#reveal-text-3'].forEach(sel => {
+    gsap.to(sel, {
+      opacity: 1, x: 0, duration: 1.1, ease: 'power3.out',
+      scrollTrigger: { trigger: sel, start: 'top 80%', toggleActions: 'play none none none' }
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
